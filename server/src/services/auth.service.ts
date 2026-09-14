@@ -1,6 +1,7 @@
 import type { AuthUser, RegisterInput } from "@stefanmarket/shared";
 import bcrypt from "bcrypt";
 
+import { AppError } from "../lib/errors.js";
 import { generateMfaQrCode, generateMfaSecret, verifyMfaCode } from "../lib/mfa.js";
 import { prisma } from "../lib/prisma.js";
 import {
@@ -13,14 +14,7 @@ import {
 
 const BCRYPT_ROUNDS = 12;
 
-class AuthError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-  ) {
-    super(message);
-  }
-}
+class AuthError extends AppError {}
 
 async function toAuthUser(user: {
   id: string;

@@ -13,9 +13,6 @@ rolePingRouter.get("/buyer/ping", requireAuth, requireRole("buyer"), (_req, res)
 rolePingRouter.get("/seller/ping", requireAuth, requireRole("seller"), (_req, res) => {
   res.json({ pong: "seller" });
 });
-rolePingRouter.get("/admin/ping", requireAuth, requireRole("admin"), (_req, res) => {
-  res.json({ pong: "admin" });
-});
 rolePingRouter.get("/support/ping", requireAuth, requireRole("support"), (_req, res) => {
   res.json({ pong: "support" });
 });
