@@ -114,6 +114,21 @@ model User {
   ticketMessages          TicketMessage[]
   auditLogs               AuditLog[]      @relation("AuditActor")
   approvedSellerProfiles  SellerProfile[] @relation("SellerApprovedBy")
+  refreshTokens           RefreshToken[]
+}
+
+// Auth implementation detail (not a business entity from data-model.md): lets refresh
+// tokens be individually revoked server-side instead of only relying on JWT expiry.
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model SellerProfile {
