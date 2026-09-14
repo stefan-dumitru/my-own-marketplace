@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: stefanmarket
+      POSTGRES_PASSWORD: stefanmarket
+      POSTGRES_DB: stefanmarket
+    ports:
+      # Host port 5433 (not 5432) to avoid clashing with any local/native Postgres install.
+      - "5433:5432"
+    volumes:
+      - stefanmarket_pgdata:/var/lib/postgresql/data
+
+volumes:
+  stefanmarket_pgdata:
