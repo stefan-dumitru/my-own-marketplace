@@ -29,7 +29,14 @@ function toCategoryView(category: {
   isActive: boolean;
   sortOrder: number;
 }): CategoryView {
-  return category;
+  return {
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    parentId: category.parentId,
+    isActive: category.isActive,
+    sortOrder: category.sortOrder,
+  };
 }
 
 export async function listCategories(): Promise<CategoryView[]> {

@@ -8,10 +8,14 @@ import { Account } from "@/pages/Account";
 import { AdminLayout } from "@/pages/admin/AdminLayout";
 import { Categories } from "@/pages/admin/Categories";
 import { Sellers } from "@/pages/admin/Sellers";
+import { Cart } from "@/pages/Cart";
 import { Catalog } from "@/pages/Catalog";
+import { Checkout } from "@/pages/Checkout";
 import { Home } from "@/pages/Home";
 import { Login } from "@/pages/Login";
 import { MfaSetup } from "@/pages/MfaSetup";
+import { OrderDetail } from "@/pages/OrderDetail";
+import { Orders } from "@/pages/Orders";
 import { ProductDetail } from "@/pages/ProductDetail";
 import { Register } from "@/pages/Register";
 import { ProductForm } from "@/pages/seller/ProductForm";
@@ -45,6 +49,38 @@ export function App() {
           element={
             <ProtectedRoute roles={["admin", "support"]}>
               <MfaSetup />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute roles={["buyer"]}>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute roles={["buyer"]}>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute roles={["buyer"]}>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <ProtectedRoute roles={["buyer"]}>
+              <OrderDetail />
             </ProtectedRoute>
           }
         />

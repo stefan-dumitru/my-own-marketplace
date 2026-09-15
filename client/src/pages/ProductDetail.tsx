@@ -1,11 +1,20 @@
-import type { ProductDetail as ProductDetailType } from "@stefanmarket/shared";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useParams } from "react-router-dom";
+import type { CartView, ProductDetail as ProductDetailType } from "@stefanmarket/shared";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { apiFetch } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { apiFetch, ApiError } from "@/lib/api";
+import { useAuthStore } from "@/store/auth.store";
 
 export function ProductDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user, status } = useAuthStore();
+  const [quantity, setQuantity] = useState(1);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [added, setAdded] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["catalog", "product", slug],
@@ -25,6 +34,21 @@ export function ProductDetail() {
   }
 
   const { product } = data;
+
+  async function addToCart() {
+    setAddError(null);
+    setAdded(false);
+    try {
+      await apiFetch<CartView>("/buyer/cart", {
+        method: "POST",
+        body: JSON.stringify({ productId: product.id, quantity }),
+      });
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      setAdded(true);
+    } catch (err) {
+      setAddError(err instanceof ApiError ? err.message : "Something went wrong");
+    }
+  }
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
@@ -56,6 +80,34 @@ export function ProductDetail() {
           </p>
           <p className="mt-4 whitespace-pre-wrap text-sm">{product.description}</p>
           <p className="mt-6 text-sm text-muted-foreground">Sold by {product.seller.companyName}</p>
+
+          {status !== "loading" && (
+            <div className="mt-6">
+              {user?.role === "buyer" ? (
+                product.stockQuantity > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={1}
+                      max={product.stockQuantity}
+                      value={quantity}
+                      onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                      className="w-16 rounded-md border border-input bg-background px-2 py-2 text-sm"
+                    />
+                    <Button onClick={addToCart}>Add to cart</Button>
+                    {added && <span className="text-sm text-success">Added!</span>}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Out of stock</p>
+                )
+              ) : (
+                <Button variant="outline" onClick={() => navigate("/login")}>
+                  Log in to buy
+                </Button>
+              )}
+              {addError && <p className="mt-2 text-sm text-destructive">{addError}</p>}
+            </div>
+          )}
         </div>
       </div>
     </main>

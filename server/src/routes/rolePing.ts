@@ -7,9 +7,6 @@ import { requireAuth, requireRole } from "../middleware/auth.js";
 // as each role's features are built in later milestones.
 export const rolePingRouter = Router();
 
-rolePingRouter.get("/buyer/ping", requireAuth, requireRole("buyer"), (_req, res) => {
-  res.json({ pong: "buyer" });
-});
 rolePingRouter.get("/support/ping", requireAuth, requireRole("support"), (_req, res) => {
   res.json({ pong: "support" });
 });
