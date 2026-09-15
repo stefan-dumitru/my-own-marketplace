@@ -6,3 +6,4 @@ export type Role = (typeof ROLES)[number];
 
 export * from "./auth.js";
 export * from "./admin.js";
+export * from "./product.js";

@@ -37,6 +37,15 @@ export async function listCategories(): Promise<CategoryView[]> {
   return categories.map(toCategoryView);
 }
 
+// Public/buyer-facing read — excludes archived categories, unlike the admin listCategories above.
+export async function listPublicCategories(): Promise<CategoryView[]> {
+  const categories = await prisma.category.findMany({
+    where: { isActive: true },
+    orderBy: [{ parentId: "asc" }, { sortOrder: "asc" }],
+  });
+  return categories.map(toCategoryView);
+}
+
 export async function createCategory(input: CreateCategoryInput): Promise<CategoryView> {
   if (input.parentId) {
     const parent = await prisma.category.findUnique({ where: { id: input.parentId } });

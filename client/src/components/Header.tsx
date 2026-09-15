@@ -16,6 +16,14 @@ export function Header() {
           stefanmarket
         </Link>
         <div className="flex items-center gap-4 text-sm">
+          <Link to="/products" className="text-muted-foreground hover:text-foreground">
+            Shop
+          </Link>
+          {user?.role === "seller" && (
+            <Link to="/seller/products" className="text-muted-foreground hover:text-foreground">
+              Sell
+            </Link>
+          )}
           {user?.role === "admin" && (
             <Link to="/admin" className="text-muted-foreground hover:text-foreground">
               Admin

@@ -10,9 +10,11 @@ import { AppError } from "./lib/errors.js";
 import { adminCategoriesRouter } from "./routes/adminCategories.js";
 import { adminSellersRouter } from "./routes/adminSellers.js";
 import { authRouter } from "./routes/auth.js";
+import { catalogRouter } from "./routes/catalog.js";
 import { healthRouter } from "./routes/health.js";
 import { meRouter } from "./routes/me.js";
 import { rolePingRouter } from "./routes/rolePing.js";
+import { sellerProductsRouter } from "./routes/sellerProducts.js";
 
 export function createApp() {
   const app = express();
@@ -28,6 +30,8 @@ export function createApp() {
   app.use("/api", rolePingRouter);
   app.use("/api/admin/sellers", adminSellersRouter);
   app.use("/api/admin/categories", adminCategoriesRouter);
+  app.use("/api/seller/products", sellerProductsRouter);
+  app.use("/api/catalog", catalogRouter);
 
   app.use((req: Request, res: Response) => {
     res.status(404).json({ error: "Not found" });
